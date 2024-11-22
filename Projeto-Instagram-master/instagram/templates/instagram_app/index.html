@@ -1,0 +1,138 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Feed do Instagram{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'index.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Barra lateral -->
+        <div class="navigation-section">
+            <div class="website-logo">
+                <a href="#">
+                    <i class='bx bxl-instagram' style="font-size: 50px; color: #E4405F;"></i>
+                    <span>Instagram</span>
+                </a>
+            </div>
+            <div class="navigation-icons">
+                <div class="navigation-keys">
+                    <div class="navigation-icon">
+                        <i class="material-icons">home</i>
+                        <a href="#" class="navigation-name">Home</a>
+                    </div>
+                    <div class="navigation-icon">
+                        <i class='bx bx-search'></i>
+                        <a href="#" class="navigation-name">Search</a>
+                    </div>
+                    <div class="navigation-icon">
+                        <i class='bx bx-compass'></i>
+                        <a href="#" class="navigation-name">Explore</a>
+                    </div>
+                    <div class="navigation-icon">
+                        <i class='bx bx-movie-play'></i>
+                        <a href="#" class="navigation-name">Reels</a>
+                    </div>
+                    <div class="navigation-icon">
+                        <i class='bx bxl-messenger'></i>
+                        <a href="#" class="navigation-name">Messages</a>
+                    </div>
+                    <div class="navigation-icon">
+                        <i class='bx bx-heart'></i>
+                        <a href="#" class="navigation-name">Notifications</a>
+                    </div>
+                    <div class="navigation-icon">
+                        <i class="material-icons">add_box</i>
+                        <a href="#" class="navigation-name">Create</a>
+                    </div>
+                    <div class="navigation-profile">
+                        <img src="{% static 'IG-website-images/pic05.jpeg' %}" alt="Profile">
+                        <a href="#" class="navigation-name">Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo principal -->
+        <div class="main-content">
+            <!-- Stories -->
+            {% block stories %}
+            <div class="stories">
+                <div class="story">
+                    <img src="{% static 'IG-website-images/story1.jpg' %}" alt="Story 1">
+                    <span>Story 1</span>
+                </div>
+                <div class="story">
+                    <img src="{% static 'IG-website-images/story2.jpg' %}" alt="Story 2">
+                    <span>Story 2</span>
+                </div>
+            </div>
+            {% endblock %}
+
+            <!-- Feed -->
+            {% block content %}
+            <div class="feed">
+                {% for post in posts %}
+                    <div class="post">
+                        <div class="post-header">
+                            <img src="{{ post.author.profile_picture.url }}" alt="{{ post.author.username }}">
+                            <span>{{ post.author.username }}</span>
+                        </div>
+                        <div class="post-body">
+                            <img src="{{ post.image.url }}" alt="Post Image" style="width: 100%; max-width: 300px; height: auto;">
+                        </div>
+                        <div class="post-caption">
+                            <p>{{ post.caption }}</p>
+                        </div>
+
+                        <!-- Comentários -->
+                        <div class="post-comments">
+                            <h3>Comentários:</h3>
+                            <div>
+                                {% for comment in post.comments.all %}
+                                    <p><strong>{{ comment.user.username }}</strong>: {{ comment.content }}</p>
+                                    <p><small>{{ comment.created_at|date:"d/m/Y H:i" }}</small></p>
+                                    {% if comment.user == user %}
+                                        <!-- Botão de excluir -->
+                                        <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir este comentário?');">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                        <!-- Botão de editar -->
+                                        <form method="get" action="{% url 'edit_comment' comment.id %}" style="display:inline;">
+                                            <button type="submit">Editar</button>
+                                        </form>
+                                    {% endif %}
+                                {% empty %}
+                                    <p>Seja o primeiro a comentar!</p>
+                                {% endfor %}
+                            </div>
+
+                            <!-- Formulário de adicionar comentário -->
+                            {% if user.is_authenticated %}
+                                <h4>Adicionar comentário:</h4>
+                                <form method="post" action="{% url 'index' %}">
+                                    {% csrf_token %}
+                                    {{ comment_form.as_p }}
+                                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                                    <button type="submit">Enviar</button>
+                                </form>
+                            {% else %}
+                                <p>Você precisa estar logado para comentar.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endblock %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{% extends 'instagram_app/index.html' %}
+
+{% block content %}
+<div class="edit-comment-section">
+    <h2>Editar Comentário</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</div>
+{% endblock %}
