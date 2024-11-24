@@ -1,0 +1,12 @@
+{% extends 'instagram_app/index.html' %}
+
+{% block content %}
+<div class="create-post-form">
+    <h2>Criar Post</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Publicar</button>
+    </form>
+</div>
+{% endblock %}

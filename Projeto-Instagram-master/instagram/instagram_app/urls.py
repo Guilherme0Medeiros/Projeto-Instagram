@@ -10,6 +10,7 @@ urlpatterns = [
     path('post/<int:post_id>/', views.post_detail, name='post_detail'),  # Detalhes do post
     path('delete-comment/<int:comment_id>/', views.delete_comment, name='delete_comment'), # rota para a exclusão
     path('edit-comment/<int:comment_id>/', views.edit_comment, name='edit_comment'), # Editar comentários
+    path('create-post/', views.add_post, name='create_post'), # cria post
 ]
 
 

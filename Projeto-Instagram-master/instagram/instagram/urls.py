@@ -8,3 +8,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),  # Inclui o painel de administração
     path('', include('instagram_app.urls')),  # Inclui as URLs do seu app
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

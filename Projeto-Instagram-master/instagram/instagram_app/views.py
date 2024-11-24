@@ -1,11 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .models import Post, Comment
-from .forms import PostForm
-from .forms import CommentForm
-
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post, Comment
+from django.contrib import messages
 from .forms import PostForm, CommentForm
 
 def index(request):
@@ -30,16 +26,19 @@ def index(request):
         'comment_form': comment_form,
     })
 
+@login_required
 def add_post(request):
     if request.method == 'POST':
-        form = PostForm(request.POST, request.FILES)  # Recebe os dados do formulário e arquivos
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()  # Salva o post no banco de dados
-            return redirect('index')  # Redireciona para a página de feed após salvar o post
+            post = form.save(commit=False)  # Cria o objeto Post sem salvar no banco ainda
+            post.author = request.user      # Associa o usuário logado como autor
+            post.save()                     # Agora salva no banco de dados
+            return redirect('index')        # Redireciona para o feed
     else:
-        form = PostForm()  # Se não for um POST, exibe o formulário vazio
-    
-    return render(request, 'instagram_app/add_post.html', {'form': form})
+        form = PostForm()
+
+    return render(request, 'instagram_app/create_post.html', {'form': form})
 
 # Sistema de Comentários
 

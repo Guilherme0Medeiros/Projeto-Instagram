@@ -24,7 +24,7 @@
                 <div class="navigation-keys">
                     <div class="navigation-icon">
                         <i class="material-icons">home</i>
-                        <a href="#" class="navigation-name">Home</a>
+                        <a href="{% url 'index' %}" class="navigation-name">Home</a>
                     </div>
                     <div class="navigation-icon">
                         <i class='bx bx-search'></i>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="navigation-icon">
                         <i class="material-icons">add_box</i>
-                        <a href="#" class="navigation-name">Create</a>
+                        <a href="{% url 'create_post' %}" class="navigation-name">Create</a>
                     </div>
                     <div class="navigation-profile">
                         <img src="{% static 'IG-website-images/pic05.jpeg' %}" alt="Profile">
